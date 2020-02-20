@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1582167357 source:/home/ligerfotis/helloworld/main.cpp
+	<iostream>
+	<dirent.h>
+	<sys/stat.h>
+	<bits/stdc++.h>
+
+1582168107 source:/home/ligerfotis/cpp_ws/project1/main.cpp
+	<iostream>
+	<dirent.h>
+	<sys/stat.h>
+	<bits/stdc++.h>
+
+1582168107 source:/home/ligerfotis/cpp_ws/CSE5311/project1/main.cpp
+	<iostream>
+	<dirent.h>
+	<sys/stat.h>
+	<bits/stdc++.h>
+
