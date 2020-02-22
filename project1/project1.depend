@@ -17,3 +17,9 @@
 	<sys/stat.h>
 	<bits/stdc++.h>
 
+1582398572 source:/home/liger/CSE5311/project1/main.cpp
+	<iostream>
+	<dirent.h>
+	<sys/stat.h>
+	<bits/stdc++.h>
+
