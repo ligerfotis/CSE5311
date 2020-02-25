@@ -3,10 +3,14 @@
 #include <sys/stat.h>
 #include <bits/stdc++.h>
 #include <list>
+#include <vector>
 #include <iterator>
 #define RANGE 255
 
 using namespace std;
+typedef std::list<int> IntList; // define IntList to be a std::list of int elements
+typedef std::vector<IntList> ListArray; // define ListArray as a vector
+
 
 /* Code of functions based on GeeksforGeeks tutorial
     https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/
@@ -28,12 +32,43 @@ void countSort(int *Y, int m)
     int count[RANGE + 1], i;
     memset(count, 0, sizeof(count));
 
+    //initialize a vector of vectors size m
+    vector<vector<int> > positions;
+    vector<int> vec1(m,-1);
+
+    for(i = 0; i<m; ++i){
+        positions.push_back(vec1);
+    }
     // Store count of each character
-    //toDo: array of posotions
-    list<int> positions[m];
     for(i = 0; i<m; ++i){
         ++count[Y[i]];
-        positions[Y[i]].push_back(i);
+        for (int j=0; j<m;j++){
+            if (positions[Y[i]-1][j] != -1)
+                continue;
+            else{
+                positions[Y[i]-1][j] = i;
+                break;
+            }
+        }
+    }
+
+    //descenting order
+    for(i = 0; i<m; ++i){
+        sort(positions[Y[i]].begin(), positions[Y[i]].end(), greater<int>());
+    }
+    // Displaying the 2D vector
+    for (int i = 0; i < m; i++)
+    {
+        if (std::count(positions[i].begin(), positions[i].end(), -1) != m){
+            cout << i <<": ";
+            for (int j = 0; j < m; j++)
+            {
+                if (positions[i][j] != -1)
+                    cout << positions[i][j];
+            }
+            cout << "\n";
+        }
+
     }
 
     // Change count[i] so that count[i] now contains actual
