@@ -62,6 +62,56 @@ vector< vector<int> >& countSort(int *Y, int m)
     return positions;
 }
 
+/* Dynamic Programming C++ implementation of LIS problem */
+
+// Utility function to print LIS
+void printVector(vector<int>& arr)
+{
+    for (int x : arr)
+        cout << x << " ";
+    cout << endl;
+}
+// Function to construct and print Longest Increasing
+// Subsequence
+void constructPrintLIS(vector<int> vec, int n)
+{
+    // L[i] - The longest increasing sub-sequence
+    // ends with vec[i]
+    vector<vector<int> > L(n);
+
+    // L[0] is equal to vec[0]
+    L[0].push_back(vec[0]);
+
+    // start from index 1
+    for (int i = 1; i < n; i++)
+    {
+        // do for every j less than i
+        for (int j = 0; j < i; j++)
+        {
+            /* L[i] = {Max(L[j])} + vec[i]
+            where j < i and vec[j] < vec[i] */
+            if ((vec[i] > vec[j]) &&
+                    (L[i].size() < L[j].size() + 1))
+                L[i] = L[j];
+        }
+
+        // L[i] ends with vec[i]
+        L[i].push_back(vec[i]);
+    }
+
+    // L[i] now stores increasing sub-sequence of
+    // vec[0..i] that ends with vec[i]
+    vector<int> max = L[0];
+
+    // LIS will be max of all increasing sub-
+    // sequences of vec
+    for (vector<int> x : L)
+        if (x.size() > max.size())
+            max = x;
+
+    // max will contain LIS
+    printVector(max);
+}
 /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
 int lcs( int *X, int *Y, int m, int n )
 {
@@ -117,7 +167,7 @@ int lcs( int *X, int *Y, int m, int n )
     }
 
     // Print the lcs
-    cout << "LCS is ";
+    cout << "Longest Common Subsequence\n";
     for (int i =0; i< L[m][n]; i++){
     cout << lcs[i];
     }
@@ -138,7 +188,7 @@ int max(int a, int b)
 /* Driver program to test above function */
 int main()
 {
-    char* filename="lab1.a.dat";
+    char* filename="lab1.b.dat";
     int n,m,indicator;
 
     ifstream File;
@@ -166,6 +216,7 @@ int main()
     where the symbol appears in the second sequence.
     Do not do 256 passes over the second sequence!(Think about counting sort)
     */
+
     vector<vector<int> > pos = countSort(arr2, m);
     // Displaying the 2D vector
     for (int i = 0; i < m; i++)
@@ -180,19 +231,25 @@ int main()
             cout << "\n";
         }
     }
+
     /* 1.b.2
     Produce an intermediate sequence by replacingeach symbol in the first
     sequence by its positions from the second sequence
     */
+
     vector<int> intermediate = replaceSeq(arr1, pos, m);
     // Displaying the intermediate vector
-    cout << "Intermediate Sequence: ";
-    for (int i = 0; i < intermediate.size(); i++)
+    cout << "Intermediate Sequence\n";
+    for (int i = 0; i < (int)intermediate.size(); i++)
          cout << intermediate[i];
     cout << "\n";
 
+    int k = intermediate.size();
+    cout << "Longest Strictly Increasing Subsequence\n";
+    constructPrintLIS( intermediate, k );
     // Print the lcs
-    printf("Length of LCS is %d\n", lcs(arr1, arr2, n, m));
+    lcs(arr1, arr2, n, m);
+    //printf("Length of LCS is %d\n", lcs(arr1, arr2, n, m));
 
     return 0;
 }
