@@ -244,6 +244,9 @@ int main()
          cout << intermediate[i];
     cout << "\n";
 
+    /*1.b.3
+    Compute a LSIS of the intermediate sequence
+    */
     int k = intermediate.size();
     cout << "Longest Strictly Increasing Subsequence\n";
     constructPrintLIS( intermediate, k );
