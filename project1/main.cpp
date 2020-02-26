@@ -5,10 +5,9 @@
 #include <list>
 #include <vector>
 #include <iterator>
-#define RANGE 255
+#define ALPHABET_SIZE 256
 
 using namespace std;
-
 
 /* Code of functions based on GeeksforGeeks tutorial
     https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/
@@ -27,30 +26,36 @@ vector<int> replaceSeq(int *X, vector<vector<int> > positions, int m){
     return intermediate;
 }
 
-
-//initialize a vector of vectors size m
-vector<vector<int> > positions;
-/*determine the positions where the symbol appears in the second sequence*/
-vector< vector<int> >& countSort(int *Y, int m)
+// Utility function to print LIS
+void printVector(vector<int>& arr)
 {
-    // Create a count array to store count of inidividul
-    // characters and initialize count array as 0
-    int count[RANGE + 1], i;
-    memset(count, 0, sizeof(count));
+    for (int x : arr)
+        cout << x << " ";
+    cout << endl;
+}
 
+/*determine the positions where the symbol appears in the second sequence*/
+vector< vector<int> > countSort(int *Y, int m)
+{
+    // Create a count array to store count of inidividual
+    // characters and initialize count array as 0
+    //int count[RANGE + 1], i;
+    //memset(count, 0, sizeof(count));
+    int i;
+    //initialize a vector of vectors size m
+    vector<vector<int> > positions;
     vector<int> vec1(m,-1);
 
-    for(i = 0; i<m; ++i){
+    for(i = 0; i<ALPHABET_SIZE; ++i){
         positions.push_back(vec1);
     }
     // Store count of each character
-    for(i = 0; i<m; ++i){
-        ++count[Y[i]];
-        for (int j=0; j<m;j++){
-            if (positions[Y[i]-1][j] != -1)
+    for(i = 0; i < m; ++i){
+        for (int j=0; j < m; j++){
+            if (positions[Y[i]][j] != -1)
                 continue;
             else{
-                positions[Y[i]-1][j] = i;
+                positions[Y[i]][j] = i;
                 break;
             }
         }
@@ -64,13 +69,7 @@ vector< vector<int> >& countSort(int *Y, int m)
 
 /* Dynamic Programming C++ implementation of LIS problem */
 
-// Utility function to print LIS
-void printVector(vector<int>& arr)
-{
-    for (int x : arr)
-        cout << x << " ";
-    cout << endl;
-}
+
 // Function to construct and print Longest Increasing
 // Subsequence
 void constructPrintLIS(vector<int> vec, int n)
@@ -169,7 +168,7 @@ int lcs( int *X, int *Y, int m, int n )
     // Print the lcs
     cout << "Longest Common Subsequence\n";
     for (int i =0; i< L[m][n]; i++){
-    cout << lcs[i];
+    cout << lcs[i] << " ";
     }
     cout << "\n";
 
@@ -188,13 +187,13 @@ int max(int a, int b)
 /* Driver program to test above function */
 int main()
 {
-    char* filename="lab1.b.dat";
+    char filename[]="lab1.e.dat";
     int n,m,indicator;
 
     ifstream File;
     File.open(filename);
     File >> n >> m;
-    cout << "Size of 1st array: "<< n << "\nSize of 2nd array: "<< m;
+    cout << "Size of array: "<< n;
     int arr1[n];
     int arr2[m];
     //assess m=n
@@ -209,7 +208,11 @@ int main()
     }
     File.close();
     cout << "\n";
-
+    for (int i = 0; i < n; i++)
+    {
+        cout << arr1[i] << " ";
+    }
+    cout << "\n";
 
     /* 1.b.1
     For each of the 256 alphabet symbols, determine the positions (descending order)
@@ -217,21 +220,20 @@ int main()
     Do not do 256 passes over the second sequence!(Think about counting sort)
     */
 
-    vector<vector<int> > pos = countSort(arr2, m);
+    vector< vector<int> > pos = countSort(arr2, m);
     // Displaying the 2D vector
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < ALPHABET_SIZE; i++)
     {
         if (std::count(pos[i].begin(), pos[i].end(), -1) != m){
             cout << i <<": ";
             for (int j = 0; j < m; j++)
             {
                 if (pos[i][j] != -1)
-                    cout << pos[i][j];
+                    cout << pos[i][j] << " ";
             }
             cout << "\n";
         }
     }
-
     /* 1.b.2
     Produce an intermediate sequence by replacingeach symbol in the first
     sequence by its positions from the second sequence
@@ -241,7 +243,7 @@ int main()
     // Displaying the intermediate vector
     cout << "Intermediate Sequence\n";
     for (int i = 0; i < (int)intermediate.size(); i++)
-         cout << intermediate[i];
+         cout << intermediate[i] << " ";
     cout << "\n";
 
     /*1.b.3
