@@ -18,7 +18,7 @@ sequence by its positions from the second sequence */
 vector<int> replaceSeq(int *X, vector<vector<int> > positions, int m){
     vector<int> intermediate;
     for (int i = 0; i < m; i++){
-        for (int j = 0; j < positions[X[i]].size(); j++){
+        for (int j = 0; j < (int)positions[X[i]].size(); j++){
             //if (positions[X[i]][j] != -1)
             intermediate.push_back(positions[X[i]][j]);
         }
@@ -49,7 +49,7 @@ std::vector<std::vector<int>> countSort(int *Y, int m)
         positions[Y[i]].push_back(i);
     }
     //descenting order
-    for(i = 0; i<positions.size(); ++i){
+    for(i = 0; i<(int)positions.size(); ++i){
         sort(positions[i].begin(), positions[i].end(), greater<int>());
     }
     return positions;
@@ -58,46 +58,61 @@ std::vector<std::vector<int>> countSort(int *Y, int m)
 /* Dynamic Programming C++ implementation of LIS problem */
 
 
-// Function to construct and print Longest Increasing
-// Subsequence
-void constructPrintLIS(vector<int> vec, int n)
+// Binary search
+int GetCeilIndex(std::vector<int> arr, vector<int>& T, int l, int r,
+                 int key)
 {
-    // L[i] - The longest increasing sub-sequence
-    // ends with vec[i]
-    vector<vector<int> > L(n);
-
-    // L[0] is equal to vec[0]
-    L[0].push_back(vec[0]);
-
-    // start from index 1
-    for (int i = 1; i < n; i++)
-    {
-        // do for every j less than i
-        for (int j = 0; j < i; j++)
-        {
-            /* L[i] = {Max(L[j])} + vec[i]
-            where j < i and vec[j] < vec[i] */
-            if ((vec[i] > vec[j]) &&
-                    (L[i].size() < L[j].size() + 1))
-                L[i] = L[j];
-        }
-
-        // L[i] ends with vec[i]
-        L[i].push_back(vec[i]);
+    while (r - l > 1) {
+        int m = l + (r - l) / 2;
+        if (arr[T[m]] >= key)
+            r = m;
+        else
+            l = m;
     }
 
-    // L[i] now stores increasing sub-sequence of
-    // vec[0..i] that ends with vec[i]
-    vector<int> max = L[0];
+    return r;
+}
 
-    // LIS will be max of all increasing sub-
-    // sequences of vec
-    for (vector<int> x : L)
-        if (x.size() > max.size())
-            max = x;
+int LSIS(std::vector<int> arr, int n)
+{
+    // Add boundary case, when array n is zero
+    // Depend on smart pointers
 
-    // max will contain LIS
-    printVector(max);
+    vector<int> tailIndices(n, 0); // Initialized with 0
+    vector<int> prevIndices(n, -1); // initialized with -1
+
+    int len = 1; // it will always point to empty location
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < arr[tailIndices[0]]) {
+            // new smallest value
+            tailIndices[0] = i;
+        }
+        else if (arr[i] > arr[tailIndices[len - 1]]) {
+            // arr[i] wants to extend largest subsequence
+            prevIndices[i] = tailIndices[len - 1];
+            tailIndices[len++] = i;
+        }
+        else {
+            // arr[i] wants to be a potential condidate of
+            // future subsequence
+            // It will replace ceil value in tailIndices
+            int pos = GetCeilIndex(arr, tailIndices, -1,
+                                   len - 1, arr[i]);
+
+            prevIndices[i] = tailIndices[pos - 1];
+            tailIndices[pos] = i;
+        }
+    }
+
+    vector<int> output;
+
+    for (int i = tailIndices[len - 1]; i >= 0; i = prevIndices[i])
+        output.push_back(arr[i]);
+
+    sort(output.begin(), output.end());
+    printVector(output);
+
+    return len;
 }
 /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
 int lcs( int *X, int *Y, int m, int n )
@@ -171,11 +186,10 @@ int max(int a, int b)
     return (a > b)? a : b;
 }
 
-
 /* Driver program to test above function */
 int main()
 {
-    char filename[]="lab1.e.dat";
+    char filename[]="lab1.d.dat";
     int n,m,indicator;
 
     ifstream File;
@@ -214,7 +228,7 @@ int main()
     for (int i = 0; i < ALPHABET_SIZE; i++){
         if (pos[i].size() != 0){
             cout  << i << ": " ;
-            for (int j = 0; j < pos[i].size(); j++)
+            for (int j = 0; j < (int)pos[i].size(); j++)
                 cout << pos[i][j] << " ";
             cout << endl;
         }
@@ -223,24 +237,25 @@ int main()
     Produce an intermediate sequence by replacingeach symbol in the first
     sequence by its positions from the second sequence
     */
-
+    // Complexity O(mlogm)
     vector<int> intermediate = replaceSeq(arr1, pos, m);
     // Displaying the intermediate vector
     cout << "Intermediate Sequence\n";
     for (int i = 0; i < (int)intermediate.size(); i++)
          cout << intermediate[i] << " ";
     cout << "\n";
-
     /*1.b.3
     Compute a LSIS of the intermediate sequence
     */
-/*    int k = intermediate.size();
+    int k = intermediate.size();
+
     cout << "Longest Strictly Increasing Subsequence\n";
-    constructPrintLIS( intermediate, k );
+    // Complexity O()
+    LSIS(intermediate, k );
     // Print the lcs
-    lcs(arr1, arr2, n, m);
+    //lcs(arr1, arr2, n, m);
     //printf("Length of LCS is %d\n", lcs(arr1, arr2, n, m));
-*/
+
     return 0;
 }
 
