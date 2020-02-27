@@ -35,34 +35,22 @@ void printVector(vector<int>& arr)
 }
 
 /*determine the positions where the symbol appears in the second sequence*/
-vector< vector<int> > countSort(int *Y, int m)
+std::vector<std::vector<int>> countSort(int *Y, int m)
 {
-    // Create a count array to store count of inidividual
-    // characters and initialize count array as 0
-    //int count[RANGE + 1], i;
-    //memset(count, 0, sizeof(count));
     int i;
     //initialize a vector of vectors size m
-    vector<vector<int> > positions;
-    vector<int> vec1(m,-1);
+    std::vector<std::vector<int>> positions;
 
     for(i = 0; i<ALPHABET_SIZE; ++i){
-        positions.push_back(vec1);
+        positions.push_back(std::vector<int>());
     }
     // Store count of each character
     for(i = 0; i < m; ++i){
-        for (int j=0; j < m; j++){
-            if (positions[Y[i]][j] != -1)
-                continue;
-            else{
-                positions[Y[i]][j] = i;
-                break;
-            }
-        }
+        positions[Y[i]].push_back(i);
     }
     //descenting order
-    for(i = 0; i<m; ++i){
-        sort(positions[Y[i]].begin(), positions[Y[i]].end(), greater<int>());
+    for(i = 0; i<positions.size(); ++i){
+        sort(positions[i].begin(), positions[i].end(), greater<int>());
     }
     return positions;
 }
@@ -222,40 +210,37 @@ int main()
 
     vector< vector<int> > pos = countSort(arr2, m);
     // Displaying the 2D vector
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-    {
-        if (std::count(pos[i].begin(), pos[i].end(), -1) != m){
-            cout << i <<": ";
-            for (int j = 0; j < m; j++)
-            {
-                if (pos[i][j] != -1)
-                    cout << pos[i][j] << " ";
-            }
-            cout << "\n";
+        // Store count of each character
+    for (int i = 0; i < ALPHABET_SIZE; i++){
+        if (pos[i].size() != 0){
+            cout  << i << ": " ;
+            for (int j = 0; j < pos[i].size(); j++)
+                cout << pos[i][j] << " ";
+            cout << endl;
         }
     }
     /* 1.b.2
     Produce an intermediate sequence by replacingeach symbol in the first
     sequence by its positions from the second sequence
     */
-
+    /*
     vector<int> intermediate = replaceSeq(arr1, pos, m);
     // Displaying the intermediate vector
     cout << "Intermediate Sequence\n";
     for (int i = 0; i < (int)intermediate.size(); i++)
          cout << intermediate[i] << " ";
     cout << "\n";
-
+*/
     /*1.b.3
     Compute a LSIS of the intermediate sequence
     */
-    int k = intermediate.size();
+/*    int k = intermediate.size();
     cout << "Longest Strictly Increasing Subsequence\n";
     constructPrintLIS( intermediate, k );
     // Print the lcs
     lcs(arr1, arr2, n, m);
     //printf("Length of LCS is %d\n", lcs(arr1, arr2, n, m));
-
+*/
     return 0;
 }
 
