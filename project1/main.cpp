@@ -18,9 +18,9 @@ sequence by its positions from the second sequence */
 vector<int> replaceSeq(int *X, vector<vector<int> > positions, int m){
     vector<int> intermediate;
     for (int i = 0; i < m; i++){
-        for (int j = 0; j < m; j++){
-            if (positions[X[i]-1][j] != -1)
-                intermediate.push_back(positions[X[i]-1][j]);
+        for (int j = 0; j < positions[X[i]].size(); j++){
+            //if (positions[X[i]][j] != -1)
+            intermediate.push_back(positions[X[i]][j]);
         }
     }
     return intermediate;
@@ -207,7 +207,7 @@ int main()
     where the symbol appears in the second sequence.
     Do not do 256 passes over the second sequence!(Think about counting sort)
     */
-
+    //Complexity O(2*AlhabetSize + m)
     vector< vector<int> > pos = countSort(arr2, m);
     // Displaying the 2D vector
         // Store count of each character
@@ -223,14 +223,14 @@ int main()
     Produce an intermediate sequence by replacingeach symbol in the first
     sequence by its positions from the second sequence
     */
-    /*
+
     vector<int> intermediate = replaceSeq(arr1, pos, m);
     // Displaying the intermediate vector
     cout << "Intermediate Sequence\n";
     for (int i = 0; i < (int)intermediate.size(); i++)
          cout << intermediate[i] << " ";
     cout << "\n";
-*/
+
     /*1.b.3
     Compute a LSIS of the intermediate sequence
     */
