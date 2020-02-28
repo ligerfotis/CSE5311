@@ -217,16 +217,23 @@ int max(int a, int b)
     return (a > b)? a : b;
 }
 /* Driver program to test above function */
-int main()
+int main(int argc, char** argv)
 {
     /* Time function returns the time since the
         Epoch(jan 1 1970). Returned time is in seconds. */
     clock_t start_time, end_time;
-    char filename[]="lab1.e.dat";
+    char filename[]="lab1.c.dat";
+    ifstream File;
+    if (argc > 1){
+      cout << "Filename: " << argv[1] << endl;
+      File.open((argv[1]));
+    }
+    else
+        File.open(filename);
+
+
     int n,m,indicator;
 
-    ifstream File;
-    File.open(filename);
     File >> n >> m;
     //cout << "Size of array: "<< n << endl;
     int arr1[n];
