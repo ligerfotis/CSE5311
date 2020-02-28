@@ -30,11 +30,17 @@ vector<int> replaceSeq(int *X, vector<vector<int> > positions, int m){
     return intermediate;
 }
 
-// Utility function to print LIS
-void printVector(vector<int> arr)
+// Utility function to print vectors
+void printVector(vector<int> arr, bool vertical = false)
 {
-    for (int x : arr)
-        cout << x << " ";
+    for (int x : arr){
+        cout << x ;
+
+        if (vertical)
+            cout << endl;
+        else
+            cout << " ";
+    }
 }
 
 /*determine the positions where the symbol appears in the second sequence*/
@@ -216,13 +222,13 @@ int main()
     /* Time function returns the time since the
         Epoch(jan 1 1970). Returned time is in seconds. */
     clock_t start_time, end_time;
-    char filename[]="lab1.a.dat";
+    char filename[]="lab1.e.dat";
     int n,m,indicator;
 
     ifstream File;
     File.open(filename);
     File >> n >> m;
-    cout << "Size of array: "<< n << endl;
+    //cout << "Size of array: "<< n << endl;
     int arr1[n];
     int arr2[m];
     //assess m=n
@@ -239,16 +245,17 @@ int main()
     /* 1.a
         Matrix Method
     */
-    float time_taken;
+    float time_matrix_LCS;
+    float time_LSIS_LCS;
 
     start_time = clock();
     vector <int> lcs1 = lcs(arr1, arr2, n, m);
     printf("Matrix LCS length: %d ", (int)lcs1.size());
     end_time = clock();
-    time_taken = float(end_time - start_time) / float(CLOCKS_PER_SEC);
-    cout << "CPU : " << fixed
-         << time_taken << setprecision(3);
-    cout << " sec " << endl;
+    time_matrix_LCS = float(end_time - start_time) / float(CLOCKS_PER_SEC);
+//    cout << "CPU : " << fixed
+//         << time_matrix_LCS << setprecision(3);
+//    cout << " sec " << endl;
 
     /* 1.b.1
     For each of the 256 alphabet symbols, determine the positions (descending order)
@@ -268,33 +275,41 @@ int main()
     vector<int> intermediate = replaceSeq(arr1, pos, m);
 
     int k = intermediate.size();
-    cout << "LSISinputLength: " << k<< endl;
+    //cout << "LSISinputLength: " << k<< endl;
 
     /*1.b.3
     Compute a LSIS of the intermediate sequence
     https://www.techiedelight.com/longest-increasing-subsequence/
     */
-    cout << "LSIS length: ";
     vector<int> LSISseq = LSIS(intermediate, k);
-    cout << LSISseq.size();
+    //cout << LSISseq.size() << endl;
     //cout << "LSIS LCS length: " << printLIS(intermediate);
     end_time = clock();
-    time_taken = float(end_time - start_time) / float(CLOCKS_PER_SEC);
-    cout << " CPU : " << fixed
-         << time_taken << setprecision(3);
-    cout << " sec " << endl;
+    time_LSIS_LCS = float(end_time - start_time) / float(CLOCKS_PER_SEC);
+
 
     /*1.b.4
     The sequence of values from the LSIS may be used
     as indexes to the second sequence to obtain an LCS.
     */
     vector<int> lcs2  = getLCSFromIndexes(LSISseq, arr2);
+    cout << "LSIS LCS length: " << (int)lcs2.size() << endl;
+
     bool identical = std::equal(lcs1.begin(), lcs1.end(), lcs2.begin());
     if (identical)
-        printVector(lcs1);
+        printVector(lcs1,true);
     cout << -1 << endl;
+    /*
+    Print CPU times
+    */
+    cout << "CPU Matrix LCS: " << fixed
+         << time_matrix_LCS << setprecision(3);
+    cout << " sec ";
+    cout << "CPU Matrix LCS: " << fixed
+         << time_LSIS_LCS << setprecision(3);
+    cout << " sec " << endl;
 
-    //printVector(lcs2);
+    //printVector(lcs2, false);
 
     return 0;
 }
