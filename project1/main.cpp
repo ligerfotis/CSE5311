@@ -229,7 +229,7 @@ int main(int argc, char** argv)
 
     start_time = clock();
     vector <int> lcs1 = lcs(arr1, arr2, n, m);
-    cout << "Matrix LCS length:" << (int)lcs1.size();
+    cout << "Matrix LCS length: " << (int)lcs1.size() << " ";
     end_time = clock();
     time_matrix_LCS = float(end_time - start_time) / float(CLOCKS_PER_SEC);
 
