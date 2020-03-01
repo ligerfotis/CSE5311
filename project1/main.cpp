@@ -14,12 +14,10 @@
 
 using namespace std;
 
-/* Code of functions based on GeeksforGeeks tutorial
-    https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/
+/*
+Produce an intermediate sequence by replacingeach symbol in the first
+sequence by its positions from the second sequence
 */
-int max(int a, int b);
-/*Produce an intermediate sequence by replacingeach symbol in the first
-sequence by its positions from the second sequence */
 vector<int> replaceSeq(int *X, vector<vector<int> > positions, int m){
     vector<int> intermediate;
     for (int i = 0; i < m; i++){
@@ -69,7 +67,8 @@ std::vector<std::vector<int>> countSort(int *Y, int m)
     Function to find Longest Increasing Subsequence in given array
     https://en.wikipedia.org/wiki/Longest_increasing_subsequence
 */
-vector <int> LSIS(vector<int> arr, int n){
+vector <int> LSIS(vector<int> arr){
+    int n = (int)arr.size();
     vector<int> pred(n,-1);
 
     vector<int> tail(n+1, -1);
@@ -122,6 +121,7 @@ vector <int> LSIS(vector<int> arr, int n){
     return seq;
 
 }
+
 vector<int> getLCSFromIndexes(vector<int> LSISseq, int *Y){
 
     vector<int> lcs2;
@@ -131,7 +131,6 @@ vector<int> getLCSFromIndexes(vector<int> LSISseq, int *Y){
 
     return lcs2;
 }
-
 
 /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
 vector<int> lcs( int *X, int *Y, int m, int n )
@@ -196,10 +195,8 @@ int max(int a, int b)
 /* Driver program to test above function */
 int main(int argc, char** argv)
 {
-    /* Time function returns the time since the
-        Epoch(jan 1 1970). Returned time is in seconds. */
     clock_t start_time, end_time;
-    char filename[]="lab1.e.dat";
+    char filename[]="lab1.a.dat";
     ifstream File;
     if (argc > 1){
       cout << "Filename: " << argv[1] << endl;
@@ -208,14 +205,11 @@ int main(int argc, char** argv)
     else
         File.open(filename);
 
-
     int n,m,indicator;
 
     File >> n >> m;
-    //cout << "Size of array: "<< n << endl;
     int arr1[n];
     int arr2[m];
-    //assess m=n
     for(int i=0; i<n; i++)
     {
         File >> arr1[i];
@@ -226,6 +220,7 @@ int main(int argc, char** argv)
         File >> arr2[i];
     }
     File.close();
+
     /* 1.a
         Matrix Method
     */
@@ -237,9 +232,6 @@ int main(int argc, char** argv)
     cout << "Matrix LCS length:" << (int)lcs1.size();
     end_time = clock();
     time_matrix_LCS = float(end_time - start_time) / float(CLOCKS_PER_SEC);
-//    cout << "CPU : " << fixed
-//         << time_matrix_LCS << setprecision(3);
-//    cout << " sec " << endl;
 
     /* 1.b.1
     For each of the 256 alphabet symbols, determine the positions (descending order)
@@ -247,29 +239,19 @@ int main(int argc, char** argv)
     Do not do 256 passes over the second sequence!(Think about counting sort)
     */
     start_time = clock();
-    //Complexity O(2*AlhabetSize + m)
     vector< vector<int> > pos = countSort(arr2, m);
 
     /* 1.b.2
     Produce an intermediate sequence by replacingeach symbol in the first
     sequence by its positions from the second sequence
     */
-
-    // Complexity O(mlogm)
     vector<int> intermediate = replaceSeq(arr1, pos, m);
-
-    int k = intermediate.size();
-    //cout << "LSISinputLength: " << k<< endl;
 
     /*1.b.3
     Compute a LSIS of the intermediate sequence
     https://www.techiedelight.com/longest-increasing-subsequence/
     */
-    vector<int> LSISseq = LSIS(intermediate, k);
-    //printVector(LSISseq);
-    //int len = LSIS(intermediate, k);
-    //cout << "LSIS length: " << len << endl;
-    //cout << "LSIS LCS length: " << printLIS(intermediate);
+    vector<int> LSISseq = LSIS(intermediate);
     end_time = clock();
     time_LSIS_LCS = float(end_time - start_time) / float(CLOCKS_PER_SEC);
 
@@ -294,8 +276,6 @@ int main(int argc, char** argv)
     cout << "CPU Matrix LCS: " << fixed
          << time_LSIS_LCS << setprecision(3);
     cout << " sec " << endl;
-
-    //printVector(lcs2, false);
 
     return 0;
 }
