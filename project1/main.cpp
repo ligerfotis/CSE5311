@@ -273,7 +273,7 @@ int main(int argc, char** argv)
     cout << "CPU Matrix LCS: " << fixed
          << time_matrix_LCS << setprecision(3);
     cout << " sec ";
-    cout << "CPU Matrix LCS: " << fixed
+    cout << "CPU LSIS LCS: " << fixed
          << time_LSIS_LCS << setprecision(3);
     cout << " sec " << endl;
 
