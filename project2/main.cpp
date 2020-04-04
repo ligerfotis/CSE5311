@@ -19,6 +19,9 @@
 #include <sys/stat.h>
 #include <bits/stdc++.h>
 using namespace std;
+
+#include <math.h>
+#include <cmath>
 // Basic Definitions
 
 #define WHITE 0
@@ -30,6 +33,10 @@ using namespace std;
 
 int n;  // number of nodes
 int residualEdges;  // number of edges in residual network
+
+//Fotis
+int delta; //capacity scaling
+
 struct edge {
   int tail,head,capacity,flow,inverse;
 };
@@ -95,12 +102,12 @@ int bfs (int start, int target)
         return 1;
 
       // Search all adjacent white nodes v. If the residual capacity
-      // from u to v in the residual network is positive,
+      // from u to v in the residual network is equal or bigger than delta,
       // enqueue v.
       for (i=firstEdge[u]; i<firstEdge[u+1]; i++)
       {
         v=edgeTab[i].head;
-        if (color[v]==WHITE && edgeTab[i].capacity-edgeTab[i].flow>0)
+        if (color[v]==WHITE && edgeTab[i].capacity-edgeTab[i].flow >= delta)
         {
           enqueue(v);
           pred[v] = u;
@@ -139,33 +146,37 @@ int max_flow (int source, int sink)
     for (i=0; i<residualEdges; i++)
       edgeTab[i].flow=0;
 
-    // While there exists an augmenting path,
-    // increment the flow along this path.
-    while (bfs(source,sink))
-    {
-      // Determine the amount by which we can increment the flow.
-      int increment = oo;
-      APcount++;
-      for (u=sink; pred[u]!=(-1); u=pred[u])
-      {
-        i=predEdge[u];
-        increment = min(increment,edgeTab[i].capacity-edgeTab[i].flow);
-      }
-      // Now increment the flow.
-      for (u=sink; pred[u]!=(-1); u=pred[u])
-      {
-        i = edgeTab[predEdge[u]].inverse;
-        edgeTab[predEdge[u]].flow += increment;
-        edgeTab[i].flow -= increment;  // Reverse in residual
-      }
-      if (n<=20)
-      {
-        // Path trace
-        for (u=sink; pred[u]!=(-1); u=pred[u])
-          printf("%d<-",u);
-        printf("%d adds %d incremental flow\n",source,increment);
-      }
-      max_flow += increment;
+    while(delta > 0 ){
+        cout << "Scaling Parameter is: " << delta << endl;
+        // While there exists an augmenting path,
+        // increment the flow along this path.
+        while (bfs(source,sink))
+        {
+          // Determine the amount by which we can increment the flow.
+          int increment = oo;
+          APcount++;
+          for (u=sink; pred[u]!=(-1); u=pred[u])
+          {
+            i=predEdge[u];
+            increment = min(increment,edgeTab[i].capacity-edgeTab[i].flow);
+          }
+          // Now increment the flow.
+          for (u=sink; pred[u]!=(-1); u=pred[u])
+          {
+            i = edgeTab[predEdge[u]].inverse;
+            edgeTab[predEdge[u]].flow += increment;
+            edgeTab[i].flow -= increment;  // Reverse in residual
+          }
+          //if (n<=20)
+          //{
+            // Path trace
+            for (u=sink; pred[u]!=(-1); u=pred[u])
+              printf("%d<-",u);
+            printf("%d adds %d incremental flow\n",source,increment);
+          //}
+          max_flow += increment;
+        }
+        delta /=2;
     }
     printf("%d augmenting paths\n",APcount);
     // No more augmenting paths, so cut is based on reachability from last BFS.
@@ -234,7 +245,7 @@ void dumpFinal()
         edgeTab[i].capacity,edgeTab[i].inverse);
 }
 
-void read_input_file(int argc, char** argv)
+int read_input_file(int argc, char** argv)
 {
     int tail,head,capacity,i,j;
     int inputEdges;     // Number of edges in input file.
@@ -243,6 +254,9 @@ void read_input_file(int argc, char** argv)
     edgeType work;
     edgeType *ptr;
     float startCPU,stopCPU;
+
+    // Fotis
+    int max_delta = -1;
 
     char filename[]="lab2spr20.dat";
     ifstream File;
@@ -276,6 +290,9 @@ void read_input_file(int argc, char** argv)
         printf("Invalid input %d %d %d at %d\n",tail,head,capacity,__LINE__);
         exit(0);
       }
+      if (max_delta < capacity)
+        max_delta = capacity;
+
       // Save input edge
       edgeTab[workingEdges].tail=tail;
       edgeTab[workingEdges].head=head;
@@ -287,6 +304,10 @@ void read_input_file(int argc, char** argv)
       edgeTab[workingEdges].capacity=0;
       workingEdges++;
     }
+    //cout << "Max capacity found: " << max_delta << endl;
+    // calculate the biggest power of two less than or equal to max_delta.
+    delta = pow(2, floor(log(max_delta)/log(2)));    // divide by log(2) to make sure it is the logarithm of two we are taking
+    //cout << "Max Capacity:" << delta << endl;
     if (n<=20)
     {
       printf("Input & inverses:\n");
@@ -319,6 +340,7 @@ void read_input_file(int argc, char** argv)
         edgeTab[residualEdges].head=edgeTab[i].head;
         edgeTab[residualEdges].capacity=edgeTab[i].capacity;
       }
+
     residualEdges++;
     if (n<=20)
     {
