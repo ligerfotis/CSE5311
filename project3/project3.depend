@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1587618820 source:/home/liger/CSE5311/project3/main.cpp
+1587659067 source:/home/liger/CSE5311/project3/main.cpp
 	<iostream>
 	<dirent.h>
 	<sys/stat.h>
@@ -14,4 +14,5 @@
 	<math.h>
 	<limits.h>
 	<string.h>
+	<algorithm>
 

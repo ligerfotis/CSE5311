@@ -12,6 +12,7 @@
 #include <math.h>
 #include <limits.h>
 #include <string.h>
+#include <algorithm>
 #define NINF INT_MIN
 using namespace std;
 
@@ -134,6 +135,11 @@ void Graph::addEdge(int u, int v, int weight)
     AdjListNode node;
     node.v = v;
     node.weight= weight;
+//    auto it = std::find_if(adj[v].begin(), adj[v].end(),
+//                       [u] (const AdjListNode& n) {
+//                          return n.v == u;
+//                       })!= adj[v].end();
+//    if (!it)
     adj[u].push_back(node); // Add v to u's list
 }
 
@@ -152,7 +158,6 @@ void Graph::getBigestSubstring()
                 ++it_u;
             }
         }
-        //cout << it_v->v << endl;
     }
 }
 
@@ -172,6 +177,7 @@ void Graph::longestPath(string str_array[])
             //cout << string( total_overlap, ' ' ) << str_array[it->v] << endl;
         }
     }
+    cout << "Length of SCS "<< total_overlap << endl;
 
 }
 Graph fillEdgesHamiltonian(string arr[], int len)
