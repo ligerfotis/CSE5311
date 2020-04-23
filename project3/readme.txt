@@ -14,10 +14,10 @@ The code can be compliled running
 
 Then run
 
-    ./project3.exe <filename>
+    ./project3.exe <lab3spr20.a.dat>
 e.g. 
 
-    ./project3.exe lab3spr20.a.dat
+    "./project3.exe lab3spr20.a.dat
 
 ##### Note: if the executable cannot run check for execution permissions
 
