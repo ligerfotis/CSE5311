@@ -14,7 +14,7 @@ The code can be compliled running
 
 Then run
 
-    ./project3.exe <lab3spr20.a.dat>
+    ./project3.exe <filename>
 e.g. 
 
     "./project3.exe lab3spr20.a.dat
